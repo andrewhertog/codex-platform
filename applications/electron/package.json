@@ -114,7 +114,11 @@
     "fs-extra": "^9.0.1",
     "theia-ide-launcher-ext": "1.59.1",
     "theia-ide-product-ext": "1.59.1",
-    "theia-ide-updater-ext": "1.59.1"
+    "theia-ide-updater-ext": "1.57.104",
+    "theia-ide-codex-ext": "0.0.0",
+    "theia-ide-shared-config-ext": "0.0.0",
+    "theia-ide-shared-types-ext": "0.0.0",
+    "theia-ide-shared-ui-ext": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "1.59.0",
