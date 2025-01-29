@@ -61,7 +61,8 @@
   },
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
-    "frontier-rnd.frontier-authentication": "https://open-vsx.org/api/frontier-rnd/frontier-authentication/0.1.1/file/frontier-rnd.frontier-authentication-0.1.1.vsix"
+    "frontier-rnd.frontier-authentication": "https://open-vsx.org/api/frontier-rnd/frontier-authentication/0.1.1/file/frontier-rnd.frontier-authentication-0.1.1.vsix",
+    "equinusocio.vsc-material-theme": "https://open-vsx.org/api/Equinusocio/vsc-material-theme/34.4.0/file/Equinusocio.vsc-material-theme-34.4.0.vsix"
   },
   "theiaPluginsExcludeIds": [
     "ms-vscode.js-debug-companion",

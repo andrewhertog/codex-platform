@@ -8,11 +8,11 @@
  ********************************************************************************/
 
 :root {
-    --theia-branding-logo: url(../icons/TheiaIDE.png);
+    --theia-branding-logo: url(../icons/codex-wordmark.png);
 }
 
 .theia-icon {
-    background-image: url("../icons/512-512.png");
+    background-image: url("../icons/codex-logo.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;

@@ -20,7 +20,7 @@ import {
 } from "@theia/core/lib/browser";
 import { Event, Emitter } from "@theia/core";
 import { Message } from "@theia/core/lib/browser";
-// import { Button } from "shared-ui";
+import { Button } from "theia-ide-shared-ui-ext";
 
 import "./style/index.css";
 export interface FileToEdit {
@@ -186,7 +186,7 @@ export class ContextEditorWidget
   render(): React.ReactElement {
     return (
       <div className="context-editor-container">
-        {/* <Button>Click me</Button> */}
+        <Button>Click me</Button>
         {this.currentFile ? (
           <>
             <div className="editor-header">
