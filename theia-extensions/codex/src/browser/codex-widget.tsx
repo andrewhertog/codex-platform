@@ -20,11 +20,7 @@ import {
 } from "@theia/core/lib/browser";
 import { Event, Emitter } from "@theia/core";
 import { Message } from "@theia/core/lib/browser";
-<<<<<<< HEAD
 import { Button } from "theia-ide-shared-ui-ext";
-=======
-// import { Button } from "shared-ui";
->>>>>>> 6e9b796 (add codex extension for shared ui and codex editor)
 
 import "./style/index.css";
 export interface FileToEdit {
@@ -190,11 +186,7 @@ export class ContextEditorWidget
   render(): React.ReactElement {
     return (
       <div className="context-editor-container">
-<<<<<<< HEAD
         <Button>Click me</Button>
-=======
-        {/* <Button>Click me</Button> */}
->>>>>>> 6e9b796 (add codex extension for shared ui and codex editor)
         {this.currentFile ? (
           <>
             <div className="editor-header">
