@@ -1,0 +1,50 @@
+---
+description: When working with or creating Theia plugis refrence this file
+globs: 
+---
+
+**Plugin Creation:**
+1. Navigate to plugins dir: `cd theia-plugins`
+2. Generate scaffold: `yo @theia/plugin`
+3. Name format: `codex-{feature}-plugin`
+
+**Critical Configurations:**
+
+```json:package.json
+{
+  "name": "codex-your-plugin-plugin", // Must match pattern
+  "scripts": {
+    "build": "build": "yarn run format-code && yarn run compile && theia-plugin pack && mkdir -p ../../plugins && (for f in *.theia; do mkdir -p \"../../plugins/${f%.theia}\" && unzip -q \"$f\" -d \"../../plugins/${f%.theia}\"; done)", 
+  }
+}
+```
+
+If you need to change the name of a plugin make sire update the webpack. NOTE: hyphins must be replaced with underscores. And there my be other normalizations that theia is expecting. See  Error Prevention section for example of name Mismatch error pattern. 
+```javascript:webpack.config.js
+module.exports = {
+  output: {
+    library: "theia_codex_your_plugin_plugin" // Hyphens → underscores
+  },
+  externals: {
+    "@theia/plugin": "theia.theia_codex_your_plugin_plugin" // Must match
+  }
+};
+```
+
+**Build System Constraint:**
+```json
+"build:plugins": "lerna run --scope=\"codex*plugin\" build"
+```
+
+**Error Prevention:**
+- Name transformation: `codex-x-plugin` → `theia_codex_x_plugin`
+- Mismatch error pattern:
+```bash
+Frontend plugin not found: "theia_theia_ide_band_colors_plugin"
+```
+
+
+
+
+
+
