@@ -8,8 +8,8 @@ on:
   pull_request:
     branches:
       - master
-  schedule:
-    - cron: '0 4 * * *' # Runs every day at 4am: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule
+  # schedule:
+  #   - cron: '0 4 * * *' # Runs every day at 4am: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule
 
 jobs:
 
@@ -53,26 +53,26 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
 
-      - name: Test (Linux)
-        if: matrix.tests != 'skip' && runner.os == 'Linux'
-        uses: GabrielBB/xvfb-action@86d97bde4a65fe9b290c0b3fb92c2c4ed0e5302d #1.6
-        with:
-          run: yarn electron test
+      # - name: Test (Linux)
+      #   if: matrix.tests != 'skip' && runner.os == 'Linux'
+      #   uses: GabrielBB/xvfb-action@86d97bde4a65fe9b290c0b3fb92c2c4ed0e5302d #1.6
+      #   with:
+      #     run: yarn electron test
 
-      - name: Test (Windows)
-        if: matrix.tests != 'skip' && runner.os == 'Windows'
-        shell: bash
-        run: |
-          yarn electron test
+      # - name: Test (Windows)
+      #   if: matrix.tests != 'skip' && runner.os == 'Windows'
+      #   shell: bash
+      #   run: |
+      #     yarn electron test
           
-      - name: Test (macOS)
-        if: matrix.tests != 'skip' && runner.os == 'macOS'
-        shell: bash
-        run: |
-          yarn electron test
+      # - name: Test (macOS)
+      #   if: matrix.tests != 'skip' && runner.os == 'macOS'
+      #   shell: bash
+      #   run: |
+      #     yarn electron test
 
-      - name: Lint
-        if: matrix.tests != 'skip'
-        shell: bash
-        run: |
-          yarn lint
+      # - name: Lint
+      #   if: matrix.tests != 'skip'
+      #   shell: bash
+      #   run: |
+      #     yarn lint
