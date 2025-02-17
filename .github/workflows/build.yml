@@ -48,11 +48,17 @@ jobs:
           yarn --skip-integrity-check --network-timeout 100000
           yarn build:dev
           yarn download:plugins
-          yarn package:applications:preview
+          yarn package:applications:prod
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
-
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'macOS'
+        with:
+          name: TheiaIDE
+          path: ./applications/electron/dist/**.dmg
+          
       # - name: Test (Linux)
       #   if: matrix.tests != 'skip' && runner.os == 'Linux'
       #   uses: GabrielBB/xvfb-action@86d97bde4a65fe9b290c0b3fb92c2c4ed0e5302d #1.6
