@@ -62,9 +62,8 @@
   },
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
-    "frontier-rnd.frontier-authentication": "https://open-vsx.org/api/frontier-rnd/frontier-authentication/0.1.2/file/frontier-rnd.frontier-authentication-0.1.2.vsix",
-    "equinusocio.vsc-material-theme": "https://open-vsx.org/api/Equinusocio/vsc-material-theme/34.4.0/file/Equinusocio.vsc-material-theme-34.4.0.vsix",
-    "project-accelerate.codex-editor-extension": "https://open-vsx.org/api/project-accelerate/codex-editor-extension/0.1.18/file/project-accelerate.codex-editor-extension-0.1.18.vsix"
+    "frontier-rnd.frontier-authentication": "https://open-vsx.org/api/frontier-rnd/frontier-authentication/0.2.0/file/frontier-rnd.frontier-authentication-0.2.0.vsix",
+    "project-accelerate.codex-editor-extension": "https://open-vsx.org/api/project-accelerate/codex-editor-extension/0.1.24/file/project-accelerate.codex-editor-extension-0.1.24.vsix"
   },
   "theiaPluginsExcludeIds": [
     "ms-vscode.js-debug-companion",
@@ -73,8 +72,7 @@
     "vscode.github",
     "vscode.github-authentication",
     "vscode.microsoft-authentication",
-    "eclipse-theia.builtin-extension-pack",
-    "vscjava.vscode-java-dependency"
+    "eclipse-theia.builtin-extension-pack"
   ],
   "workspaces": [
     "applications/*",
