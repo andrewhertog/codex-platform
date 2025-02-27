@@ -56,9 +56,30 @@ jobs:
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: TheiaIDE
+          name: TheiaIDE.dmg
           path: ./applications/electron/dist/**.dmg
-          
+          compression-level: 0
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'ubuntu-22.04'
+        with:
+          name: TheiaIDE-Linux
+          path: |
+            ./applications/electron/dist/*.AppImage
+            ./applications/electron/dist/*.deb
+            ./applications/electron/dist/*.rpm
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'windows-2019'
+        with:
+          name: TheiaIDE-Linux
+          path: |
+            ./applications/electron/dist/*.exe
+            ./applications/electron/dist/*.msi
+        
+      
+
       # - name: Test (Linux)
       #   if: matrix.tests != 'skip' && runner.os == 'Linux'
       #   uses: GabrielBB/xvfb-action@86d97bde4a65fe9b290c0b3fb92c2c4ed0e5302d #1.6

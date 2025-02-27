@@ -33,8 +33,8 @@ win:
     - nsis
   publish:
     provider: github
-    repo: theia-ide
-    owner: eclipse-theia
+    repo: codex-platform
+    owner: andrewhertog
     releaseType: release
     vPrefixedTagName: true
     publishAutoUpdate: true
