@@ -32,9 +32,12 @@ win:
   target:
     - nsis
   publish:
-    provider: generic
-    url: "https://download.eclipse.org/theia/ide/${version}/windows"
-    useMultipleRangeRequest: false
+    provider: github
+    repo: theia-ide
+    owner: eclipse-theia
+    releaseType: release
+    vPrefixedTagName: true
+    publishAutoUpdate: true
 mac:
   icon: resources/icons/MacLauncherIcon/512-512-2.icns
   category: public.app-category.developer-tools
