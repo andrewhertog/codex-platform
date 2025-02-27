@@ -93,7 +93,7 @@ linux:
     publishAutoUpdate: true
 
 rpm:
-  artifactName: ${productName}.${ext}
+  artifactName: ${productName}-${arch}-${version}.${ext}
   fpm: ['--rpm-rpmbuild-define=_build_id_links none']
 
 nsis:
@@ -107,13 +107,13 @@ nsis:
   uninstallerSidebar: resources/icons/InstallerSidebarImage/164-314Windows.bmp
   allowToChangeInstallationDirectory: true
   runAfterFinish: false
-  artifactName: ${productName}Setup.${ext}
+  artifactName: ${productName}Setup-${arch}-${version}.${ext}
   license: LICENSE
 dmg:
-  artifactName: ${productName}.${ext}
+  artifactName: ${productName}-${arch}-${version}.${ext}
 deb:
-  artifactName: ${productName}.${ext}
+  artifactName: ${productName}-${arch}-${version}.${ext}
 appImage:
-  artifactName: ${productName}.${ext}
+  artifactName: ${productName}-${arch}-${version}.${ext}
 
 afterPack: ./scripts/after-pack.js

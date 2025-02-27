@@ -58,11 +58,10 @@ jobs:
         with:
           name: TheiaIDE.dmg
           path: ./applications/electron/dist/**.dmg
-          compression-level: 0
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
-        if: runner.os == 'ubuntu-22.04'
+        if: runner.os == 'Linux'
         with:
           name: TheiaIDE-Linux
           path: |
@@ -71,7 +70,7 @@ jobs:
             ./applications/electron/dist/*.rpm
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
-        if: runner.os == 'windows-2019'
+        if: runner.os == 'Windows'
         with:
           name: TheiaIDE-Linux
           path: |
