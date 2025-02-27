@@ -30,10 +30,9 @@ extraResources:
 win:
   icon: resources/icons/WindowsLauncherIcon/TheiaIDE.ico
   target:
-    - nsis:
-        arch:
-          - x64
-          - arm64
+    arch:
+      - x64
+      - arm64
   publish:
     provider: github
     repo: codex-platform
@@ -50,14 +49,9 @@ mac:
         - theia
   darkModeSupport: true
   target:
-    - dmg:
-        arch:
-          - x64
-          - arm64
-    - zip:
-        arch:
-          - x64
-          - arm64
+    arch:
+      - x64
+      - arm64
   publish:
     provider: github
     repo: codex-platform
@@ -71,19 +65,10 @@ linux:
   mimeTypes:
     - inode/directory
   vendor: Eclipse Foundation, Inc
-  target:
-    - deb:
-        arch:
-          - amd64
-          - arm64
-    - AppImage:
-        arch:
-          - x64
-          - arm64
-    - rpm:
-        arch:
-          - x86_64
-          - aarch64
+target:
+  arch:
+    - amd64
+    - arm64
   publish:
     provider: github
     repo: codex-platform
