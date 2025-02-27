@@ -50,8 +50,12 @@ mac:
     - dmg
     - zip
   publish:
-    provider: generic
-    url: "https://download.eclipse.org/theia/ide/latest/macos"
+    provider: github
+    repo: codex-platform
+    owner: andrewhertog
+    releaseType: release
+    vPrefixedTagName: true
+    publishAutoUpdate: true
 linux:
   icon: resources/icons/LinuxLauncherIcons
   category: Development
@@ -63,8 +67,12 @@ linux:
     - AppImage
     - rpm
   publish:
-    provider: generic
-    url: "https://download.eclipse.org/theia/ide/latest/linux"
+    provider: github
+    repo: codex-platform
+    owner: andrewhertog
+    releaseType: release
+    vPrefixedTagName: true
+    publishAutoUpdate: true
 
 rpm:
   artifactName: ${productName}.${ext}
