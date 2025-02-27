@@ -61,9 +61,14 @@ linux:
   target:
     - deb
     - AppImage
+    - rpm
   publish:
     provider: generic
     url: "https://download.eclipse.org/theia/ide/latest/linux"
+
+rpm:
+  artifactName: ${productName}.${ext}
+  fpm: ['--rpm-rpmbuild-define=_build_id_links none']
 
 nsis:
   menuCategory: true
