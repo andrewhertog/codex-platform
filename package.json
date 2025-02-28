@@ -45,7 +45,7 @@
     "download:plugins": "theia download:plugins --rate-limit=15 --parallel=false && yarn permissions:writeable",
     "package:applications": "lerna run --scope=\"theia-ide*app\" package --concurrency 1",
     "package:applications:preview": "lerna run --scope=\"theia-ide*app\" package:preview --concurrency 1",
-    "package:applications:prod": "lerna run --scope=\"theia-ide*app\" package:prod --concurrency 1",
+    "package:applications:prod": "lerna run --scope=\"CodexPlatform\" package:prod --concurrency 1",
     "permissions:writeable": "ts-node scripts/make-files-writeable.ts plugins",
     "watch": "lerna run --parallel watch",
     "test": "lerna run test",
