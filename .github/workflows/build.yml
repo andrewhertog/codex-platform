@@ -14,7 +14,7 @@ on:
 jobs:
 
   build:
-    name: ${{ matrix.os }}, Node.js v${{ matrix.node }}
+    name: ${{ matrix.os }}, Node.js v${{ matrix.node }}, ${{ matrix.arch }}
 
     strategy:
       fail-fast: false
