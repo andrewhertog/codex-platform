@@ -14,14 +14,13 @@ on:
 jobs:
 
   build:
-    name: ${{ matrix.os }}, Node.js v${{ matrix.node }}, ${{ matrix.arch }}
+    name: ${{ matrix.os }}, Node.js v${{ matrix.node }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [windows-2019, ubuntu-22.04, macos-13]
         node: ['20.x']
-        arch: [x64, arm64]
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
@@ -57,29 +56,26 @@ jobs:
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: codex-platform-${{ runner.os }}-${{ matrix.arch }}
+          name: codex-platform-${{ runner.os }}
           path: ./applications/electron/dist/**.dmg
-          compression-level: 0
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
         with:
-          name: codex-platform-${{ runner.os }}-${{ matrix.arch }}
+          name: codex-platform-${{ runner.os }}
           path: |
             ./applications/electron/dist/*.AppImage
             ./applications/electron/dist/*.deb
             ./applications/electron/dist/*.rpm
-          compression-level: 0
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
-          name: codex-platform-${{ runner.os }}-${{ matrix.arch }}
+          name: codex-platform-${{ runner.os }}
           path: |
             ./applications/electron/dist/*.exe
             ./applications/electron/dist/*.msi
-          compression-level: 0
         
       
 
