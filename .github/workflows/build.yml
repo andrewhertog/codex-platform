@@ -21,6 +21,7 @@ jobs:
       matrix:
         os: [windows-2019, ubuntu-22.04, macos-13]
         node: ['20.x']
+        arch: [x64, arm64]
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
@@ -56,26 +57,29 @@ jobs:
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: TheiaIDE.dmg
+          name: codex-platform-${{ runner.os }}-${{ matrix.arch }}
           path: ./applications/electron/dist/**.dmg
+          compression-level: 0
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
         with:
-          name: TheiaIDE-Linux
+          name: codex-platform-${{ runner.os }}-${{ matrix.arch }}
           path: |
             ./applications/electron/dist/*.AppImage
             ./applications/electron/dist/*.deb
             ./applications/electron/dist/*.rpm
+          compression-level: 0
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
-          name: TheiaIDE-Linux
+          name: codex-platform-${{ runner.os }}-${{ matrix.arch }}
           path: |
             ./applications/electron/dist/*.exe
             ./applications/electron/dist/*.msi
+          compression-level: 0
         
       
 
