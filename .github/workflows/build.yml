@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           yarn --skip-integrity-check --network-timeout 100000
-          yarn build:dev
+          yarn build
           yarn download:plugins
           yarn package:applications:prod
         env:
