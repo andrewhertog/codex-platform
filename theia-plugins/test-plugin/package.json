@@ -15,11 +15,12 @@
   "devDependencies": {
     "@theia/plugin": "next",
     "@theia/plugin-packager": "latest",
-    "rimraf": "2.6.2",
-    "typescript-formatter": "7.2.2",
-    "typescript": "3.5.3",
-    "ts-loader": "^4.1.0",
     "clean-webpack-plugin": "^0.1.19",
+    "cross-env": "^7.0.3",
+    "rimraf": "2.6.2",
+    "ts-loader": "^4.1.0",
+    "typescript": "3.5.3",
+    "typescript-formatter": "7.2.2",
     "webpack": "^4.1.1",
     "webpack-cli": "^3.1.1"
   },
@@ -29,7 +30,7 @@
     "format-code": "tsfmt -r",
     "watch": "webpack-cli -w --config webpack.config.js",
     "compile": "webpack-cli --config webpack.config.js",
-    "build": "yarn run format-code && yarn run compile && theia-plugin pack && mkdir -p ../../plugins && (for f in *.theia; do mkdir -p \"../../plugins/${f%.theia}\" && unzip -q \"$f\" -d \"../../plugins/${f%.theia}\"; done) &"
+    "build": "yarn run format-code && yarn run compile && theia-plugin pack && cross-env node copy-plugin.js"
   },
   "engines": {
     "theiaPlugin": "next"
