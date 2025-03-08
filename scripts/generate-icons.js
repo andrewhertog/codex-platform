@@ -13,6 +13,7 @@ const sharp = require('sharp');
 const { promisify } = require('util');
 const writeFileAsync = promisify(fs.writeFile);
 const mkdirAsync = promisify(fs.mkdir);
+const readFileAsync = promisify(fs.readFile);
 // eslint-disable-next-line import/no-extraneous-dependencies
 const toIco = require('to-ico');
 
@@ -30,6 +31,9 @@ const splashSvgPath = path.join(projectRoot, 'universal_branding', 'codexSplash.
 // Define output directories
 const electronResourcesDir = path.join(projectRoot, 'applications', 'electron', 'resources');
 const electronResourcesIconsDir = path.join(electronResourcesDir, 'icons');
+const browserResourcesDir = path.join(projectRoot, 'applications', 'browser', 'resources');
+const electronIcoDir = path.join(projectRoot, 'applications', 'electron', 'ico');
+const browserIcoDir = path.join(projectRoot, 'applications', 'browser', 'ico');
 
 // Check if source SVGs exist
 if (!fs.existsSync(logoSvgPath)) {
@@ -52,7 +56,7 @@ const directories = [
   'applications/electron/resources/icons/InstallerSidebarImage',
   'applications/electron/resources/icons/MacLauncherIcon/icns-1bit',
   'applications/electron/resources/icons/MacLauncherIcon/icns-8bit',
-  'applications/electron/resources/icons/WindowsLauncherIcon/windowsICO-24bit',
+  'applications/electron/resources/icons/WindowsLauncherIcon/windowsICO0-24bit',
   'applications/electron/resources/icons/WindowsLauncherIcon/windowsICO-8bits',
   'theia-extensions/product/src/browser/icons'
 ];
@@ -160,7 +164,7 @@ async function generateWindowsIcons() {
   // Generate the main ICO file
   const mainPngPath = path.join(icoDir, 'temp-main.png');
   await generatePng(logoSvgPath, mainPngPath, 256, 256);
-  await convertPngToIco(mainPngPath, path.join(icoDir, 'TheiaIDE.ico'), sizes);
+  await convertPngToIco(mainPngPath, path.join(icoDir, 'logo.ico'), sizes);
   fs.unlinkSync(mainPngPath);
 
   // Generate 24-bit ICO files
@@ -360,7 +364,7 @@ async function generateWindowIcon() {
   console.log('Generating Window Icon PNG...');
   await generatePng(
     logoSvgPath,
-    path.join(projectRoot, 'applications/electron/resources/icons/WindowIcon/512-512.png'),
+    path.join(projectRoot, 'applications/electron/resources/icons/WindowIcon/logo.png'),
     512,
     512
   );
@@ -532,6 +536,63 @@ async function generateResourcesIcons() {
   );
 }
 
+// Function to update favicon.ico files
+async function updateFavicons() {
+  console.log('Updating favicon.ico files...');
+
+  // Paths to favicon.ico files
+  const electronFaviconPath = path.join(electronIcoDir, 'favicon.ico');
+  const browserFaviconPath = path.join(browserIcoDir, 'favicon.ico');
+
+  // Generate a temporary PNG for conversion
+  const tempPngPath = path.join(projectRoot, 'temp-favicon.png');
+
+  try {
+    // Generate PNG from the logo
+    await generatePng(logoSvgPath, tempPngPath, 32, 32);
+
+    // Convert PNG to ICO with multiple sizes
+    const pngBuffer = fs.readFileSync(tempPngPath);
+    const icoBuffer = await toIco([pngBuffer], {
+      sizes: [16, 24, 32],  // Common favicon sizes
+      resize: true
+    });
+
+    // Update both favicon.ico files
+    await writeFileAsync(electronFaviconPath, icoBuffer);
+    console.log(`Updated favicon in ${electronFaviconPath}`);
+
+    await writeFileAsync(browserFaviconPath, icoBuffer);
+    console.log(`Updated favicon in ${browserFaviconPath}`);
+
+    // Clean up temporary PNG
+    fs.unlinkSync(tempPngPath);
+
+    return true;
+  } catch (error) {
+    console.error('Error updating favicons:', error.message);
+    // Clean up temporary PNG if it exists
+    if (fs.existsSync(tempPngPath)) {
+      fs.unlinkSync(tempPngPath);
+    }
+    return false;
+  }
+}
+
+// Copy splash screen
+async function copySplashScreen() {
+  console.log('Copying splash screen...');
+  const sourcePath = path.join(projectRoot, 'universal_branding', 'codexSplash.svg');
+  const targetPath = path.join(projectRoot, 'applications/electron/resources/codexSplash.svg');
+
+  try {
+    await fs.promises.copyFile(sourcePath, targetPath);
+    console.log('Splash screen copied successfully.');
+  } catch (error) {
+    console.error('Error copying splash screen:', error.message);
+  }
+}
+
 // Main function to run all generation tasks
 async function main() {
   try {
@@ -571,6 +632,16 @@ async function main() {
     console.log('Starting Resources icons generation...');
     await generateResourcesIcons();
     console.log('Resources icons generated successfully.');
+
+    // Copy splash screen
+    console.log('Starting splash screen copy...');
+    await copySplashScreen();
+    console.log('Splash screen copied successfully.');
+
+    // Update favicon.ico files
+    console.log('Starting favicon update...');
+    await updateFavicons();
+    console.log('Favicons updated successfully.');
 
     console.log('All icons generated successfully!');
 
