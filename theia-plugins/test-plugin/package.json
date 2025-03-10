@@ -30,7 +30,7 @@
     "format-code": "tsfmt -r",
     "watch": "webpack-cli -w --config webpack.config.js",
     "compile": "webpack-cli --config webpack.config.js",
-    "build": "yarn run format-code && yarn run compile && theia-plugin pack && cross-env node copy-plugin.js"
+    "build": "yarn run format-code && yarn run compile && theia-plugin pack && mkdir -p ../../plugins && (for f in *.theia; do mkdir -p \"../../plugins/${f%.theia}\" && unzip -q \"$f\" -d \"../../plugins/${f%.theia}\"; done)"
   },
   "engines": {
     "theiaPlugin": "next"
