@@ -15,6 +15,7 @@
   "devDependencies": {
     "@theia/plugin": "next",
     "@theia/plugin-packager": "latest",
+    "adm-zip": "^0.5.16",
     "clean-webpack-plugin": "^0.1.19",
     "cross-env": "^7.0.3",
     "rimraf": "2.6.2",
@@ -30,7 +31,7 @@
     "format-code": "tsfmt -r",
     "watch": "webpack-cli -w --config webpack.config.js",
     "compile": "webpack-cli --config webpack.config.js",
-    "build": "yarn run format-code && yarn run compile && theia-plugin pack && mkdir -p ../../plugins && (for f in *.theia; do mkdir -p \"../../plugins/${f%.theia}\" && unzip -q \"$f\" -d \"../../plugins/${f%.theia}\"; done)"
+    "build": "yarn run format-code && yarn run compile && theia-plugin pack && cross-env node scripts/copy-and-unzip-plugin.js"
   },
   "engines": {
     "theiaPlugin": "next"
