@@ -593,6 +593,54 @@ async function copySplashScreen() {
   }
 }
 
+// Update preload.html with logo.svg content
+async function updatePreloadHtml() {
+  console.log('Updating preload.html with logo.svg content...');
+  const preloadLogoSvgPath = path.join(projectRoot, 'universal_branding', 'logo.svg');
+  const preloadHtmlPath = path.join(projectRoot, 'applications/electron/resources/preload.html');
+
+  try {
+    // Check if both files exist
+    if (!fs.existsSync(preloadLogoSvgPath)) {
+      console.error(`Error: Source SVG not found at ${preloadLogoSvgPath}`);
+      return;
+    }
+
+    if (!fs.existsSync(preloadHtmlPath)) {
+      console.error(`Error: preload.html not found at ${preloadHtmlPath}`);
+      return;
+    }
+
+    // Read the logo.svg file
+    const logoSvgContent = await readFileAsync(preloadLogoSvgPath, 'utf8');
+
+    // Read the preload.html file
+    const preloadHtmlContent = await readFileAsync(preloadHtmlPath, 'utf8');
+
+    // Extract just the SVG content without XML declaration and comments
+    const svgMatch = logoSvgContent.match(/<svg[\s\S]*<\/svg>/);
+    if (!svgMatch) {
+      console.error('Error: Could not extract SVG content from logo.svg');
+      return;
+    }
+
+    const svgContent = svgMatch[0];
+
+    // Replace the existing SVG in preload.html
+    const updatedContent = preloadHtmlContent.replace(
+      /<svg[\s\S]*?<\/svg>/,
+      svgContent
+    );
+
+    // Write the updated content back to preload.html
+    await writeFileAsync(preloadHtmlPath, updatedContent, 'utf8');
+    console.log('preload.html updated successfully with logo.svg content.');
+  } catch (error) {
+    console.error('Error updating preload.html:', error.message);
+    console.error(`Stack trace: ${error.stack}`);
+  }
+}
+
 // Main function to run all generation tasks
 async function main() {
   try {
@@ -637,6 +685,11 @@ async function main() {
     console.log('Starting splash screen copy...');
     await copySplashScreen();
     console.log('Splash screen copied successfully.');
+
+    // Update preload.html with logo.svg content
+    console.log('Starting preload.html update...');
+    await updatePreloadHtml();
+    console.log('preload.html update completed.');
 
     // Update favicon.ico files
     console.log('Starting favicon update...');
