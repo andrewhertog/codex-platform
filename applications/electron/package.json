@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "CodexPlatform",
+  "name": "theia-ide-electron-app",
   "description": "Eclipse Theia IDE product",
   "productName": "CodexPlatform",
   "version": "0.0.1",
