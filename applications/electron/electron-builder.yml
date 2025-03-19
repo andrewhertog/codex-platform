@@ -36,6 +36,8 @@ win:
         target: nsis
   publish:
     provider: github
+    repo: codex-platform
+    owner: andrewhertog
     releaseType: release
     publishAutoUpdate: true
 mac:
@@ -57,6 +59,8 @@ mac:
       target: zip
   publish:
     provider: github
+    repo: codex-platform
+    owner: andrewhertog
     releaseType: release
     publishAutoUpdate: true
 linux:
@@ -80,6 +84,8 @@ linux:
       target: rpm
   publish:
     provider: github
+    repo: codex-platform
+    owner: andrewhertog
     releaseType: release
     publishAutoUpdate: true
 
