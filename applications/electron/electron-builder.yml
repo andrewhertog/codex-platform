@@ -36,10 +36,7 @@ win:
         target: nsis
   publish:
     provider: github
-    repo: codex-platform
-    owner: andrewhertog
     releaseType: release
-    vPrefixedTagName: true
     publishAutoUpdate: true
 mac:
   icon: resources/icons/MacLauncherIcon/512-512-2.icns
@@ -60,10 +57,7 @@ mac:
       target: zip
   publish:
     provider: github
-    repo: codex-platform
-    owner: andrewhertog
     releaseType: release
-    vPrefixedTagName: true
     publishAutoUpdate: true
 linux:
   icon: resources/icons/LinuxLauncherIcons
@@ -86,10 +80,7 @@ linux:
       target: rpm
   publish:
     provider: github
-    repo: codex-platform
-    owner: andrewhertog
     releaseType: release
-    vPrefixedTagName: true
     publishAutoUpdate: true
 
 rpm:
