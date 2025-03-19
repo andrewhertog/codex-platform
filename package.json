@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "1.57.104",
+  "version": "0.0.1",
   "license": "MIT",
   "author": "Rob Moran <github@thegecko.org>",
   "homepage": "https://github.com/eclipse-theia/theia-ide#readme",
@@ -36,8 +36,8 @@
   },
   "scripts": {
     "clean": "lerna run clean && rimraf node_modules",
-    "build": "yarn build:extensions && yarn build:plugins && yarn build:applications",
-    "build:dev": "yarn build:extensions && yarn build:plugins && yarn build:applications:dev",
+    "build": "yarn build:extensions && yarn build:applications",
+    "build:dev": "yarn build:extensions && yarn build:applications:dev",
     "build:applications": "yarn build:extensions && lerna run --scope=\"theia-ide*app\" build:prod --concurrency 1",
     "build:applications:dev": "yarn build:extensions && lerna run --scope=\"theia-ide*app\" build --concurrency 1",
     "build:extensions": "lerna run --scope=\"theia-ide*ext\" build",
