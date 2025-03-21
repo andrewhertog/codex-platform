@@ -37,7 +37,7 @@ win:
   publish:
     provider: github
     repo: codex-platform
-    owner: andrewhertog
+    owner: BenjaminScholtens
     releaseType: release
     publishAutoUpdate: true
 mac:
@@ -60,7 +60,7 @@ mac:
   publish:
     provider: github
     repo: codex-platform
-    owner: andrewhertog
+    owner: BenjaminScholtens
     releaseType: release
     publishAutoUpdate: true
 linux:
@@ -85,7 +85,7 @@ linux:
   publish:
     provider: github
     repo: codex-platform
-    owner: andrewhertog
+    owner: BenjaminScholtens
     releaseType: release
     publishAutoUpdate: true
 
