@@ -17,7 +17,7 @@ import { injectable } from '@theia/core/shared/inversify';
 import { isOSX, isWindows } from '@theia/core';
 
 const STABLE_CHANNEL_WINDOWS = 'https://download.eclipse.org/theia/ide/version/windows';
-const STABLE_CHANNEL_MACOS = 'https://download.eclipse.org/theia/ide/latest/macos';
+const STABLE_CHANNEL_MACOS = 'https://github.com/andrewhertog/codex-platform/releases/latest/';
 const STABLE_CHANNEL_LINUX = 'https://download.eclipse.org/theia/ide/latest/linux';
 
 const PREVIEW_CHANNEL_WINDOWS = 'https://download.eclipse.org/theia/ide-preview/version/windows';
@@ -118,6 +118,7 @@ export class TheiaUpdaterImpl implements TheiaUpdater, ElectronMainApplicationCo
 
     setUpdateChannel(channel: string): void {
         const feedURL = this.getFeedURL(channel);
+        console.log(`Setting update channel to ${channel} with feed URL ${feedURL}`);
         autoUpdater.setFeedURL(feedURL);
         if (!this.updateChannelReported) {
             this.updateChannelReported = true;
