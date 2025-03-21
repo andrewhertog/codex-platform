@@ -19,8 +19,8 @@ directories:
 files:
   - src-gen
   - lib
-  - resources/icons/WindowIcon/codex-logo.png
-  - resources/TheiaIDESplash.svg
+  - resources/icons/WindowIcon/logo.png
+  - resources/codexSplash.svg
   - scripts
   - "!**node_modules/**"
 extraResources:
@@ -28,7 +28,7 @@ extraResources:
     to: app/plugins
 
 win:
-  icon: resources/icons/WindowsLauncherIcon/TheiaIDE.ico
+  icon: resources/icons/WindowsLauncherIcon/logo.ico
   target:
       - arch: 
         - x64
@@ -97,9 +97,9 @@ nsis:
   menuCategory: true
   oneClick: false
   perMachine: false
-  installerHeaderIcon: resources/icons/WindowsLauncherIcon/TheiaIDE.ico
-  installerIcon: resources/icons/WindowsLauncherIcon/TheiaIDE.ico
-  uninstallerIcon: resources/icons/WindowsLauncherIcon/TheiaIDE.ico
+  installerHeaderIcon: resources/icons/WindowsLauncherIcon/logo.ico
+  installerIcon: resources/icons/WindowsLauncherIcon/logo.ico
+  uninstallerIcon: resources/icons/WindowsLauncherIcon/logo.ico
   installerSidebar: resources/icons/InstallerSidebarImage/164-314Windows.bmp
   uninstallerSidebar: resources/icons/InstallerSidebarImage/164-314Windows.bmp
   allowToChangeInstallationDirectory: true
