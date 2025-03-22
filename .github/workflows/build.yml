@@ -47,6 +47,19 @@ jobs:
         run: |
           sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm
 
+      - name: Update electron-builder.yaml
+        shell: bash
+        working-directory: applications/electron
+        run: |
+          export REPONAME=$(echo ${{ github.repository }} | cut -d '/' -f 2)
+          yq -i e '.win.publish.owner |= "${{github.repository_owner}}"' electron-builder.yml
+          yq -i e '.mac.publish.owner |= "${{github.repository_owner}}"' electron-builder.yml
+          yq -i e '.linux.publish.owner |= "${{github.repository_owner}}"' electron-builder.yml
+          yq -i e '.win.publish.repo |= "${REPONAME}"' electron-builder.yml
+          yq -i e '.mac.publish.repo |= "${REPONAME}"' electron-builder.yml
+          yq -i e '.linux.publish.repo |= "${REPONAME}"' electron-builder.yml
+          cat electron-builder.yml
+
       - name: Build and package
         shell: bash
         run: |
