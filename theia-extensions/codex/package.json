@@ -9,8 +9,8 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "1.57.1",
-    "@theia/plugin": "^1.57.1",
+    "@theia/core": "1.59.0",
+    "@theia/plugin": "^1.59.0",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "quill": "^2.0.3",
     "react-quill": "^2.0.0",
