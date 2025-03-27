@@ -65,11 +65,13 @@ jobs:
 
       - name: Build and package
         shell: bash
+        if: matrix.os == 'macos-13'
         env:
-          CSC_LINK: ${{ secrets.CSC_P12 }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.MAC_CSC_P12 }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_P12_PASSWORD }}
           # CSC_IDENTITY_AUTO_DISCOVERY: ${{ github.ref == 'refs/heads/master' &&  'true' || 'false' }}
           CSC_IDENTITY_AUTO_DISCOVERY: true
+          CSC_FOR_PULL_REQUEST: true
           PUBLISH_FOR_PULL_REQUEST: true
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
@@ -78,31 +80,19 @@ jobs:
           yarn build
           yarn download:plugins
           yarn package:applications:prod
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'macOS'
-        with:
-          name: codex-platform-${{ runner.os }}
-          path: ./applications/electron/dist/**.dmg
+          
+      - name: Build and package
+        shell: bash
+        if: matrix.os != 'macos-13'
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
+        run: |
+          yarn --skip-integrity-check --network-timeout 100000
+          yarn build
+          yarn download:plugins
+          yarn package:applications:prod
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'Linux'
-        with:
-          name: codex-platform-${{ runner.os }}
-          path: |
-            ./applications/electron/dist/*.AppImage
-            ./applications/electron/dist/*.deb
-            ./applications/electron/dist/*.rpm
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows'
-        with:
-          name: codex-platform-${{ runner.os }}
-          path: |
-            ./applications/electron/dist/*.exe
-            ./applications/electron/dist/*.msi
-        
       
 
       # - name: Test (Linux)
