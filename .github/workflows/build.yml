@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2019, ubuntu-22.04, macos-13]
+        os: [windows-2019, ubuntu-22.04, macos-14]
         node: ['22.12']
 
     runs-on: ${{ matrix.os }}
@@ -65,14 +65,11 @@ jobs:
 
       - name: Build and package
         shell: bash
-        if: matrix.os == 'macos-13'
+        if: matrix.os == 'macos-14'
         env:
           CSC_LINK: ${{ secrets.MAC_CSC_P12 }}
           CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_P12_PASSWORD }}
-          # CSC_IDENTITY_AUTO_DISCOVERY: ${{ github.ref == 'refs/heads/master' &&  'true' || 'false' }}
-          CSC_IDENTITY_AUTO_DISCOVERY: true
-          CSC_FOR_PULL_REQUEST: true
-          PUBLISH_FOR_PULL_REQUEST: true
+          CSC_IDENTITY_AUTO_DISCOVERY: ${{ github.ref == 'refs/heads/master' &&  'true' || 'false' }}
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
         run: |
@@ -83,7 +80,7 @@ jobs:
           
       - name: Build and package
         shell: bash
-        if: matrix.os != 'macos-13'
+        if: matrix.os != 'macos-14'
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
