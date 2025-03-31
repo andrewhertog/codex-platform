@@ -2,68 +2,42 @@
 
 INPUT=$1
 APP_ID=$2
-NEEDS_UNZIP=false
-UUID_REGEX='"uuid"\s*:\s*"([^"]+)'
-STATUS_REGEX='"status"\s*:\s*"([^"]+)'
+IDENTITY="${CODESIGN_IDENTITY:-Developer ID Application: Your Company Name}"
+APPLE_ID="${APPLE_ID:-your.email@example.com}"
+APPLE_PASSWORD="${APPLE_PASSWORD:-@keychain:AC_PASSWORD}"
+TEAM_ID="${TEAM_ID:-YOUR_TEAM_ID}"
 
-# if folder, zip it
-if [ -d "${INPUT}" ]; then
-    NEEDS_UNZIP=true
-    zip -r -q -y unsigned.zip "${INPUT}"
-    rm -rf "${INPUT}"
-    INPUT=unsigned.zip
-fi
+echo "Preparing to notarize ${INPUT} with bundle ID ${APP_ID}"
 
-# copy file to storage server
-# scp -p "${INPUT}" genie.theia@projects-storage.eclipse.org:./
-rm -f "${INPUT}"
+# Create a temporary zip file for notarization
+ZIP_FILE="notarize_app.zip"
+echo "Creating zip file for notarization..."
+ditto -c -k --keepParent "${INPUT}" "${ZIP_FILE}"
 
-# name to use on server
-REMOTE_NAME=${INPUT##*/}
+# Submit for notarization
+echo "Submitting for notarization..."
+xcrun notarytool submit "${ZIP_FILE}" \
+  --apple-id "${APPLE_ID}" \
+  --password "${APPLE_PASSWORD}" \
+  --team-id "${TEAM_ID}" \
+  --wait
 
-# notarize over ssh
-RESPONSE=$(curl -X POST -F file=@"\"${REMOTE_NAME}\"" -F "'options={\"primaryBundleId\": \"${APP_ID}\", \"staple\": true};type=application/json'" https://cbi.eclipse.org/macos/xcrun/notarize)
-
-# fund uuid and status
-[[ $RESPONSE =~ $UUID_REGEX ]]
-UUID=${BASH_REMATCH[1]}
-[[ $RESPONSE =~ $STATUS_REGEX ]]
-STATUS=${BASH_REMATCH[1]}
-
-# poll progress
-echo "  Progress: $RESPONSE"
-while [[ $STATUS == 'IN_PROGRESS' ]]; do
-    sleep 120
-    RESPONSE=$(curl -s https://cbi.eclipse.org/macos/xcrun/${UUID}/status)
-    [[ $RESPONSE =~ $STATUS_REGEX ]]
-    STATUS=${BASH_REMATCH[1]}
-    echo "  Progress: $RESPONSE"
-done
-
-if [[ $STATUS != 'COMPLETE' ]]; then
-    echo "Notarization failed: $RESPONSE"
+if [ $? -ne 0 ]; then
+    echo "Notarization submission failed"
+    rm -f "${ZIP_FILE}"
     exit 1
 fi
 
-# download stapled result
-ssh -q genie.theia@projects-storage.eclipse.org curl -o "\"stapled-${REMOTE_NAME}\"" https://cbi.eclipse.org/macos/xcrun/${UUID}/download
+# Clean up the zip file
+rm -f "${ZIP_FILE}"
 
-# copy stapled file back from server
-scp -T -p genie.theia@projects-storage.eclipse.org:"\"./stapled-${REMOTE_NAME}\"" "${INPUT}"
+# Staple the notarization ticket to the app
+echo "Stapling notarization ticket to ${INPUT}..."
+xcrun stapler staple "${INPUT}"
 
-# ensure storage server is clean
-ssh -q genie.theia@projects-storage.eclipse.org rm -f "\"${REMOTE_NAME}\"" "\"stapled-${REMOTE_NAME}\"" entitlements.plist
-
-# if unzip needed
-if [ "$NEEDS_UNZIP" = true ]; then
-    unzip -qq "${INPUT}"
-
-    if [ $? -ne 0 ]; then
-        # echo contents if unzip failed
-        output=$(cat $INPUT)
-        echo "$output"
-        exit 1
-    fi
-
-    rm -f "${INPUT}"
+if [ $? -ne 0 ]; then
+    echo "Stapling failed"
+    exit 1
 fi
+
+echo "Successfully notarized and stapled ${INPUT}"
