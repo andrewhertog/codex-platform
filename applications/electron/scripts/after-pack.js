@@ -59,7 +59,7 @@ exports.default = async function (context) {
     if ((( branch === 'master' )  && running_on_mac) && !isBuiltInSigningActive) {
         console.log('Detected Theia IDE Release on Mac without built-in signing'
             + ' - proceeding with manual signing and notarizing');
-            
+
         // Use app-builder-lib to find all binaries to sign, at this level it will include the final .app
         let childPaths = await sign_util.walkAsync(context.appOutDir);
 
