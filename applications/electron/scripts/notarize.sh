@@ -15,14 +15,14 @@ if [ -d "${INPUT}" ]; then
 fi
 
 # copy file to storage server
-scp -p "${INPUT}" genie.theia@projects-storage.eclipse.org:./
+# scp -p "${INPUT}" genie.theia@projects-storage.eclipse.org:./
 rm -f "${INPUT}"
 
 # name to use on server
 REMOTE_NAME=${INPUT##*/}
 
 # notarize over ssh
-RESPONSE=$(ssh -q genie.theia@projects-storage.eclipse.org curl -X POST -F file=@"\"${REMOTE_NAME}\"" -F "'options={\"primaryBundleId\": \"${APP_ID}\", \"staple\": true};type=application/json'" https://cbi.eclipse.org/macos/xcrun/notarize)
+RESPONSE=$(curl -X POST -F file=@"\"${REMOTE_NAME}\"" -F "'options={\"primaryBundleId\": \"${APP_ID}\", \"staple\": true};type=application/json'" https://cbi.eclipse.org/macos/xcrun/notarize)
 
 # fund uuid and status
 [[ $RESPONSE =~ $UUID_REGEX ]]
@@ -34,7 +34,7 @@ STATUS=${BASH_REMATCH[1]}
 echo "  Progress: $RESPONSE"
 while [[ $STATUS == 'IN_PROGRESS' ]]; do
     sleep 120
-    RESPONSE=$(ssh -q genie.theia@projects-storage.eclipse.org curl -s https://cbi.eclipse.org/macos/xcrun/${UUID}/status)
+    RESPONSE=$(curl -s https://cbi.eclipse.org/macos/xcrun/${UUID}/status)
     [[ $RESPONSE =~ $STATUS_REGEX ]]
     STATUS=${BASH_REMATCH[1]}
     echo "  Progress: $RESPONSE"
