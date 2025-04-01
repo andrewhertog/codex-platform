@@ -52,42 +52,49 @@ exports.default = async function (context) {
         await asyncRimraf(resolvedPath);
     }
 
-    // Only continue for macOS during CI
-    if ((( branch === 'master' )  && running_on_mac)) {
-        console.log('Detected Theia IDE Release on Mac '
-            + ' - proceeding with signing and notarizing');
+    // Check if electron-builder's built-in signing is active
+    const isBuiltInSigningActive = process.env.CSC_LINK && process.env.CSC_KEY_PASSWORD;
+
+    // Only continue for macOS during CI and if built-in signing is not active
+    if ((( branch === 'master' )  && running_on_mac) && !isBuiltInSigningActive) {
+        console.log('Detected Theia IDE Release on Mac without built-in signing'
+            + ' - proceeding with manual signing and notarizing');
+
+        // Use app-builder-lib to find all binaries to sign, at this level it will include the final .app
+        let childPaths = await sign_util.walkAsync(context.appOutDir);
+
+        // Sign deepest first
+        // From https://github.com/electron-userland/electron-builder/blob/master/packages/app-builder-lib/electron-osx-sign/sign.js#L120
+        childPaths = childPaths.sort((a, b) => {
+            const aDepth = a.split(path.sep).length;
+            const bDepth = b.split(path.sep).length;
+            return bDepth - aDepth;
+        });
+
+        // Sign binaries
+        childPaths.forEach(file => signFile(file, context.appOutDir));
+
+        // Notarize app
+        child_process.spawnSync(notarizeCommand, [
+            path.basename(appPath),
+            context.packager.appInfo.info._configuration.appId
+        ], {
+            cwd: path.dirname(appPath),
+            maxBuffer: 1024 * 10000,
+            env: process.env,
+            stdio: 'inherit',
+            encoding: 'utf-8'
+        });
     } else {
         if (running_on_mac) {
-            console.log('Not a release or dry-run requiring signing/notarizing - skipping');
+            if (isBuiltInSigningActive) {
+                console.log('Using electron-builder\'s built-in signing mechanism - skipping manual signing');
+            } else {
+                console.log('Not a release or dry-run requiring signing/notarizing - skipping');
+            }
         }
         return;
     }
-
-    // Use app-builder-lib to find all binaries to sign, at this level it will include the final .app
-    let childPaths = await sign_util.walkAsync(context.appOutDir);
-
-    // Sign deepest first
-    // From https://github.com/electron-userland/electron-builder/blob/master/packages/app-builder-lib/electron-osx-sign/sign.js#L120
-    childPaths = childPaths.sort((a, b) => {
-        const aDepth = a.split(path.sep).length;
-        const bDepth = b.split(path.sep).length;
-        return bDepth - aDepth;
-    });
-
-    // Sign binaries
-    childPaths.forEach(file => signFile(file, context.appOutDir));
-
-    // Notarize app
-    child_process.spawnSync(notarizeCommand, [
-        path.basename(appPath),
-        context.packager.appInfo.info._configuration.appId
-    ], {
-        cwd: path.dirname(appPath),
-        maxBuffer: 1024 * 10000,
-        env: process.env,
-        stdio: 'inherit',
-        encoding: 'utf-8'
-    });
 };
 
 // taken and modified from: https://github.com/gergof/electron-builder-sandbox-fix/blob/a2251d7d8f22be807d2142da0cf768c78d4cfb0a/lib/index.js

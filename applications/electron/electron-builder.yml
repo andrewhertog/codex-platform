@@ -48,6 +48,11 @@ mac:
       schemes:
         - theia
   darkModeSupport: true
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: entitlements.plist
+  entitlementsInherit: entitlements.plist
+  notarize: true
   target:
     - arch:
         - x64
