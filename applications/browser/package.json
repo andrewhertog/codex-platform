@@ -3,7 +3,7 @@
   "name": "theia-ide-browser-app",
   "description": "Eclipse Theia IDE browser product",
   "productName": "Codex-Platform",
-  "version": "v0.0.7",
+  "version": "v0.0.8",
   "license": "MIT",
   "author": "Eclipse Theia <theia-dev@eclipse.org>",
   "homepage": "https://github.com/eclipse-theia/theia-ide#readme",
