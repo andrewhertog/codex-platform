@@ -2,6 +2,7 @@
 
 INPUT=$1
 ENTITLEMENTS=$2
+IDENTITY="${CODESIGN_IDENTITY:-Developer ID Application: Your Company Name}"
 NEEDS_UNZIP=false
 
 # if folder, zip it
@@ -12,36 +13,30 @@ if [ -d "${INPUT}" ]; then
     INPUT=unsigned.zip
 fi
 
-# copy file to storage server
-scp -p "${INPUT}" genie.theia@projects-storage.eclipse.org:./
-rm -f "${INPUT}"
-
-# copy entitlements to storage server
-scp -p "${ENTITLEMENTS}" genie.theia@projects-storage.eclipse.org:./entitlements.plist
-
-# name to use on server
-REMOTE_NAME=${INPUT##*/}
-
-# sign over ssh
-# https://wiki.eclipse.org/IT_Infrastructure_Doc#Web_service
-ssh -q genie.theia@projects-storage.eclipse.org curl -f -o "\"signed-${REMOTE_NAME}\"" -F file=@"\"${REMOTE_NAME}\"" -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign
-
-# copy signed file back from server
-scp -T -p genie.theia@projects-storage.eclipse.org:"\"./signed-${REMOTE_NAME}\"" "${INPUT}"
-
-# ensure storage server is clean
-ssh -q genie.theia@projects-storage.eclipse.org rm -f "\"${REMOTE_NAME}\"" "\"signed-${REMOTE_NAME}\"" entitlements.plist
-
-# if unzip needed
+# Unzip if needed
 if [ "$NEEDS_UNZIP" = true ]; then
     unzip -qq "${INPUT}"
-
+    
     if [ $? -ne 0 ]; then
         # echo contents if unzip failed
         output=$(cat $INPUT)
         echo "$output"
         exit 1
     fi
-
+    
     rm -f "${INPUT}"
+    # Get the directory name that was extracted
+    INPUT=$(ls -d */ | head -n 1)
+    INPUT=${INPUT%/}
 fi
+
+# Sign the app using codesign
+echo "Signing ${INPUT} with identity: ${IDENTITY}"
+codesign --force --options runtime --deep --sign "${IDENTITY}" --entitlements "${ENTITLEMENTS}" "${INPUT}"
+
+if [ $? -ne 0 ]; then
+    echo "Signing failed"
+    exit 1
+fi
+
+echo "Successfully signed ${INPUT}"

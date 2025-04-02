@@ -15,12 +15,14 @@ jobs:
 
   build:
     name: ${{ matrix.os }}, Node.js v${{ matrix.node }}
+    env:
+      BRANCH_NAME: ${{ github.ref_name }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2019, ubuntu-22.04, macos-13]
-        node: ['20.x']
+        os: [windows-2019, ubuntu-22.04, macos-14]
+        node: ['22.12']
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
@@ -62,43 +64,41 @@ jobs:
           yq -i e '.win.publish.repo |= env(REPONAME)' electron-builder.yml
           yq -i e '.mac.publish.repo |= env(REPONAME)' electron-builder.yml
           yq -i e '.linux.publish.repo |= env(REPONAME)' electron-builder.yml
-          cat electron-builder.yml
 
       - name: Build and package
         shell: bash
+        if: matrix.os == 'macos-14'
+        env:
+          CSC_LINK: ${{ secrets.MAC_CSC_P12 }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_P12_PASSWORD }}
+          CSC_IDENTITY_AUTO_DISCOVERY: ${{ github.ref == 'refs/heads/master' &&  'true' || 'false' }}
+          # Add notarization variables for electron-builder
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # Make sure the team ID is directly accessible
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          NODE_OPTIONS: --max_old_space_size=4096
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
+          DEBUG: electron-notarize*
         run: |
           yarn --skip-integrity-check --network-timeout 100000
           yarn build
           yarn download:plugins
           yarn package:applications:prod
+          
+      - name: Build and package
+        shell: bash
+        if: matrix.os != 'macos-14'
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'macOS'
-        with:
-          name: codex-platform-${{ runner.os }}
-          path: ./applications/electron/dist/**.dmg
+        run: |
+          yarn --skip-integrity-check --network-timeout 100000
+          yarn build
+          yarn download:plugins
+          yarn package:applications:prod
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'Linux'
-        with:
-          name: codex-platform-${{ runner.os }}
-          path: |
-            ./applications/electron/dist/*.AppImage
-            ./applications/electron/dist/*.deb
-            ./applications/electron/dist/*.rpm
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows'
-        with:
-          name: codex-platform-${{ runner.os }}
-          path: |
-            ./applications/electron/dist/*.exe
-            ./applications/electron/dist/*.msi
-        
       
 
       # - name: Test (Linux)
