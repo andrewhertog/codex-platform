@@ -3,7 +3,7 @@
   "name": "theia-ide-electron-app",
   "description": "Eclipse Theia IDE product",
   "productName": "CodexPlatform",
-  "version": "v0.0.7",
+  "version": "v0.0.8",
   "main": "scripts/theia-electron-main.js",
   "license": "MIT",
   "author": "Eclipse Theia <theia-dev@eclipse.org>",
