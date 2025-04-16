@@ -17,6 +17,8 @@ jobs:
     name: ${{ matrix.os }}, Node.js v${{ matrix.node }}
     env:
       BRANCH_NAME: ${{ github.ref_name }}
+    permissions:
+      contents: write
 
     strategy:
       fail-fast: false
